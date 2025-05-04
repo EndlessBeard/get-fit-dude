@@ -9,6 +9,7 @@ class WorkoutPlan {
    * @param {string} options.id - Unique identifier for the workout plan
    * @param {Date} options.startDate - Start date of the workout plan
    * @param {Object} options.days - Exercises for each day of the week
+   * @param {Object} options.workoutTypes - Workout type labels for each day
    */
   constructor({
     id = crypto.randomUUID(),
@@ -21,11 +22,21 @@ class WorkoutPlan {
       friday: [],
       saturday: [],
       sunday: []
+    },
+    workoutTypes = {
+      monday: 'Upper Body',
+      tuesday: 'Lower Body',
+      wednesday: 'Core',
+      thursday: 'Upper Body',
+      friday: 'Lower Body',
+      saturday: 'Full Body',
+      sunday: 'Rest Day'
     }
   } = {}) {
     this.id = id;
     this.startDate = startDate instanceof Date ? startDate : new Date(startDate);
     this.days = days;
+    this.workoutTypes = workoutTypes;
   }
 
   /**
@@ -90,6 +101,32 @@ class WorkoutPlan {
   }
 
   /**
+   * Update the workout type for a specific day
+   * @param {string} day - Day of the week (monday, tuesday, etc.)
+   * @param {string} workoutType - The new workout type label
+   */
+  updateWorkoutType(day, workoutType) {
+    const dayLower = day.toLowerCase();
+    if (!this.days[dayLower]) {
+      throw new Error(`Invalid day: ${day}`);
+    }
+    this.workoutTypes[dayLower] = workoutType;
+  }
+
+  /**
+   * Get the workout type for a specific day
+   * @param {string} day - Day of the week (monday, tuesday, etc.)
+   * @returns {string} Workout type for the specified day
+   */
+  getWorkoutType(day) {
+    const dayLower = day.toLowerCase();
+    if (!this.workoutTypes) {
+      this.workoutTypes = {};
+    }
+    return this.workoutTypes[dayLower] || '';
+  }
+
+  /**
    * Update workout plan properties
    * @param {Object} updates - Properties to update
    */
@@ -118,6 +155,9 @@ class WorkoutPlan {
         friday: [...this.days.friday],
         saturday: [...this.days.saturday],
         sunday: [...this.days.sunday]
+      },
+      workoutTypes: {
+        ...this.workoutTypes
       }
     };
   }

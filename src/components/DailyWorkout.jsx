@@ -1,234 +1,269 @@
 import React, { useState } from 'react';
 import { useWorkout } from '../context/WorkoutContext';
-import useGestureDetection, { createSwipeFeedback } from '../hooks/useGestureDetection';
 import { getDayOfWeek } from '../utils/dateUtils';
+import { useGestureDetection } from '../hooks/useGestureDetection';
+import '../styles/animations.css';
 
 const DailyWorkout = () => {
   const { 
     selectedDay, 
-    exercisesForSelectedDay, 
-    setSelectedExercise, 
-    workoutPlan,
-    exercises,
-    addExercise, 
+    getExercisesForDay, 
+    workoutPlan, 
+    setSelectedExercise,
     addExerciseToDay,
+    updateExercise,
     removeExerciseFromDay,
     replaceExerciseInDay,
-    addHistoryEntry
+    getWorkoutTypeForDay,
   } = useWorkout();
-
-  const [showExerciseModal, setShowExerciseModal] = useState(false);
-  const [editingExerciseRow, setEditingExerciseRow] = useState(null);
-
-  // Generate a day string for the selected day (e.g., "monday")
-  const dayString = getDayOfWeek(selectedDay).toLowerCase();
   
-  // Handle clicking on an exercise name
+  const [showExerciseSelector, setShowExerciseSelector] = useState(false);
+  const [editingExerciseIndex, setEditingExerciseIndex] = useState(null);
+  const [availableExercises, setAvailableExercises] = useState([]);
+  
+  // Get day name for the selected day
+  const selectedDayName = getDayOfWeek(selectedDay).toLowerCase();
+  
+  // Get the workoutType for the selected day
+  const workoutType = getWorkoutTypeForDay(selectedDayName);
+  
+  // Get exercises for the selected day
+  const exercisesForDay = getExercisesForDay(selectedDay);
+  
+  // Initialize gesture detection for swipe controls
+  const { 
+    handleSwipeStart, 
+    handleSwipeMove, 
+    handleSwipeEnd, 
+    isGesturing 
+  } = useGestureDetection({
+    onValueChange: (fieldName, exerciseId, value) => {
+      const exercise = exercisesForDay.find(ex => ex.id === exerciseId);
+      if (exercise) {
+        const updatedExercise = { ...exercise };
+        updatedExercise[fieldName] = Math.max(1, value);
+        updateExercise(updatedExercise);
+      }
+    }
+  });
+  
+  // Add exercise handlers
+  const handleAddExercise = () => {
+    // Get all available exercises and filter out those already in today's workout
+    const currentExerciseIds = new Set(exercisesForDay.map(ex => ex.id));
+    
+    // Simulate fetching all exercises (would come from context in a real app)
+    const allExercises = Object.values(workoutPlan.exercises || {});
+    
+    // Filter exercises that match current workout type if specified
+    let filteredExercises = allExercises;
+    if (workoutType) {
+      filteredExercises = allExercises.filter(ex => 
+        !ex.category || ex.category.toLowerCase().includes(workoutType.toLowerCase())
+      );
+    }
+    
+    // Filter out exercises already in today's workout
+    const availableToAdd = filteredExercises.filter(ex => !currentExerciseIds.has(ex.id));
+    
+    setAvailableExercises(availableToAdd);
+    setShowExerciseSelector(true);
+  };
+  
+  const handleSelectExercise = (exercise) => {
+    if (editingExerciseIndex !== null) {
+      // Replace existing exercise
+      replaceExerciseInDay(selectedDayName, editingExerciseIndex, exercise.id);
+      setEditingExerciseIndex(null);
+    } else {
+      // Add new exercise
+      addExerciseToDay(selectedDayName, exercise.id);
+    }
+    setShowExerciseSelector(false);
+  };
+  
+  // Handle exercise edit/view
   const handleExerciseClick = (exercise) => {
     setSelectedExercise(exercise);
   };
   
-  // Handle clicking the edit button
-  const handleEditClick = (exerciseId) => {
-    setEditingExerciseRow(exerciseId);
-    setShowExerciseModal(true);
-  };
-  
-  // Handle closing the exercise selection modal
-  const handleCloseModal = () => {
-    setShowExerciseModal(false);
-    setEditingExerciseRow(null);
-  };
-  
-  // Handle selecting an exercise from the modal
-  const handleSelectExercise = (exercise) => {
-    if (editingExerciseRow) {
-      // Replace the existing exercise with the new one
-      replaceExerciseInDay(dayString, editingExerciseRow, exercise.id);
-    }
-    setShowExerciseModal(false);
-    setEditingExerciseRow(null);
-  };
-  
-  // Handle adding a new exercise to the day
-  const handleAddExercise = () => {
-    // Create a new exercise with default values
-    const newExercise = addExercise({
-      name: 'New Exercise',
-      sets: 3,
-      repType: 'count',
-      reps: 10,
-      category: 'Upper Body'
-    });
+  const handleEditExerciseClick = (index) => {
+    setEditingExerciseIndex(index);
     
-    // Add the new exercise to the current day
-    if (newExercise && dayString) {
-      addExerciseToDay(dayString, newExercise.id);
+    // Get all available exercises for replacing this one
+    const allExercises = Object.values(workoutPlan.exercises || {});
+    
+    // Filter exercises that match current workout type if specified
+    let filteredExercises = allExercises;
+    if (workoutType) {
+      filteredExercises = allExercises.filter(ex => 
+        !ex.category || ex.category.toLowerCase().includes(workoutType.toLowerCase())
+      );
     }
     
-    // Select the new exercise for editing
-    setSelectedExercise(newExercise);
+    setAvailableExercises(filteredExercises);
+    setShowExerciseSelector(true);
   };
   
-  // Handle removing an exercise from the day
-  const handleRemoveExercise = (exerciseId) => {
-    if (confirm('Remove this exercise from today\'s workout?')) {
-      removeExerciseFromDay(dayString, exerciseId);
-    }
-  };
-
-  // Function to update sets/reps with swipe gestures
-  const handleSwipe = (exercise, field, direction) => {
-    let value = exercise[field];
-    const change = direction === 'up' ? 1 : -1;
-    value = Math.max(1, value + change);
-    
-    // Update the history for this exercise
-    addHistoryEntry(exercise.id, {
-      date: new Date(),
-      sets: field === 'sets' ? value : exercise.sets,
-      reps: field === 'reps' ? value : exercise.reps
-    });
+  const handleRemoveExercise = (index) => {
+    removeExerciseFromDay(selectedDayName, index);
   };
   
-  // Custom hook for swipe detection
-  const setsRefs = {};
-  const repsRefs = {};
-  
-  exercisesForSelectedDay.forEach(exercise => {
-    // Sets gesture refs
-    setsRefs[exercise.id] = useGestureDetection({
-      onSwipeUp: () => {
-        handleSwipe(exercise, 'sets', 'up');
-        const el = document.getElementById(`sets-${exercise.id}`);
-        createSwipeFeedback(el, 'up');
-      },
-      onSwipeDown: () => {
-        handleSwipe(exercise, 'sets', 'down');
-        const el = document.getElementById(`sets-${exercise.id}`);
-        createSwipeFeedback(el, 'down');
-      }
-    });
-    
-    // Reps gesture refs
-    repsRefs[exercise.id] = useGestureDetection({
-      onSwipeUp: () => {
-        handleSwipe(exercise, 'reps', 'up');
-        const el = document.getElementById(`reps-${exercise.id}`);
-        createSwipeFeedback(el, 'up');
-      },
-      onSwipeDown: () => {
-        handleSwipe(exercise, 'reps', 'down');
-        const el = document.getElementById(`reps-${exercise.id}`);
-        createSwipeFeedback(el, 'down');
-      }
-    });
-  });
+  const handleCloseSelector = () => {
+    setShowExerciseSelector(false);
+    setEditingExerciseIndex(null);
+  };
 
   return (
-    <div className="daily-workout">
-      <h2 className="text-lg font-display font-bold mb-3 text-secondary flex justify-between items-center">
-        <span>{getDayOfWeek(selectedDay)}'s Workout</span>
-      </h2>
-      
-      {exercisesForSelectedDay.length > 0 ? (
-        <div className="overflow-hidden rounded-lg bg-darkgray">
-          {/* Table Header */}
-          <div className="grid grid-cols-6 bg-lightgray p-2 text-center font-bold text-sm">
-            <div className="col-span-4">Exercise</div>
-            <div className="col-span-1">Sets</div>
-            <div className="col-span-1">Reps</div>
-          </div>
-          
-          {/* Exercise Rows */}
-          <div className="exercise-list">
-            {exercisesForSelectedDay.map((exercise) => (
-              <div key={exercise.id} className="exercise-row grid grid-cols-6 p-2">
-                <div className="col-span-3 flex items-center">
-                  <span 
-                    className="cursor-pointer hover:text-secondary transition-colors truncate"
+    <div className="daily-workout-container mb-6">
+      <div className="bg-gradient-to-r from-primary/30 to-secondary/20 rounded-xl p-4 shadow-lg border border-gray-700">
+        {/* Day title with workout type */}
+        <div className="mb-4 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-white">
+            {getDayOfWeek(selectedDay)}'s Workout 
+            {workoutType && (
+              <span className="ml-2 text-sm font-normal text-secondary">({workoutType})</span>
+            )}
+          </h2>
+          <span className="text-gray-400 text-sm">{selectedDay.toLocaleDateString()}</span>
+        </div>
+        
+        {/* Exercise list */}
+        {exercisesForDay.length > 0 ? (
+          <div className="exercise-list space-y-3">
+            {exercisesForDay.map((exercise, index) => (
+              <div 
+                key={`${exercise.id}-${index}`} 
+                className="exercise-row bg-gray-800 rounded-lg p-3 shadow-md border border-gray-700 hover:border-gray-500 transition-all animate-fadeIn"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  {/* Exercise name with click action */}
+                  <div 
+                    className="exercise-name flex-grow cursor-pointer hover:text-secondary transition-colors"
                     onClick={() => handleExerciseClick(exercise)}
                   >
-                    {exercise.name}
-                  </span>
+                    <h3 className="font-bold text-white">{exercise.name}</h3>
+                    {exercise.category && (
+                      <span className="text-xs text-gray-400">{exercise.category}</span>
+                    )}
+                  </div>
+                  
+                  {/* Action buttons */}
+                  <div className="flex space-x-2">
+                    <button 
+                      className="edit-button bg-gray-700 hover:bg-gray-600 p-2 rounded-full transition-colors"
+                      onClick={() => handleEditExerciseClick(index)}
+                      title="Replace exercise"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </button>
+                    <button 
+                      className="delete-button bg-red-900 hover:bg-red-700 p-2 rounded-full transition-colors"
+                      onClick={() => handleRemoveExercise(index)}
+                      title="Remove exercise"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
                 
-                <div className="col-span-1 flex justify-end pr-2">
-                  <button 
-                    className="text-xs bg-gray-700 hover:bg-gray-600 p-1 rounded"
-                    onClick={() => handleEditClick(exercise.id)}
-                    title="Edit Exercise"
+                {/* Sets and reps with swipe interaction */}
+                <div className="sets-reps-container flex justify-around mt-3">
+                  <div className="sets-container text-center"
+                    onTouchStart={(e) => handleSwipeStart(e, 'sets', exercise.id, exercise.sets)}
+                    onTouchMove={handleSwipeMove}
+                    onTouchEnd={handleSwipeEnd}
+                    onMouseDown={(e) => handleSwipeStart(e, 'sets', exercise.id, exercise.sets)}
+                    onMouseMove={handleSwipeMove}
+                    onMouseUp={handleSwipeEnd}
+                    onMouseLeave={handleSwipeEnd}
                   >
-                    ✏️
-                  </button>
-                  <button 
-                    className="text-xs bg-gray-700 hover:bg-red-700 p-1 rounded ml-1"
-                    onClick={() => handleRemoveExercise(exercise.id)}
-                    title="Remove Exercise"
+                    <div className="text-xs text-gray-400 mb-1">Sets</div>
+                    <div className={`text-xl font-bold ${isGesturing ? 'text-secondary' : 'text-white'} transition-colors`}>
+                      {exercise.sets}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">Swipe to adjust</div>
+                  </div>
+                  
+                  <div className="reps-container text-center"
+                    onTouchStart={(e) => handleSwipeStart(e, 'reps', exercise.id, exercise.reps)}
+                    onTouchMove={handleSwipeMove}
+                    onTouchEnd={handleSwipeEnd}
+                    onMouseDown={(e) => handleSwipeStart(e, 'reps', exercise.id, exercise.reps)}
+                    onMouseMove={handleSwipeMove}
+                    onMouseUp={handleSwipeEnd}
+                    onMouseLeave={handleSwipeEnd}
                   >
-                    ✖️
-                  </button>
-                </div>
-                
-                <div 
-                  id={`sets-${exercise.id}`}
-                  ref={setsRefs[exercise.id]} 
-                  className="col-span-1 text-center bg-gray-800 rounded-md py-1 cursor-pointer"
-                  title="Swipe up/down to change"
-                >
-                  {exercise.sets}
-                </div>
-                
-                <div 
-                  id={`reps-${exercise.id}`}
-                  ref={repsRefs[exercise.id]}
-                  className="col-span-1 text-center bg-gray-800 rounded-md py-1 cursor-pointer"
-                  title="Swipe up/down to change"
-                >
-                  {exercise.reps}
+                    <div className="text-xs text-gray-400 mb-1">{exercise.repsType === 'time' ? 'Time (s)' : 'Reps'}</div>
+                    <div className={`text-xl font-bold ${isGesturing ? 'text-secondary' : 'text-white'} transition-colors`}>
+                      {exercise.reps}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">Swipe to adjust</div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+        ) : (
+          <div className="empty-workout bg-gray-800 bg-opacity-50 rounded-lg p-6 text-center">
+            <p className="text-gray-400 mb-4">No exercises planned for this day.</p>
+            <p className="text-sm text-gray-500">Tap the button below to add exercises to your workout.</p>
+          </div>
+        )}
+        
+        {/* Add exercise button */}
+        <div className="add-exercise-container mt-4 flex justify-center">
+          <button 
+            className="add-exercise-button bg-gradient-to-r from-primary to-secondary px-4 py-2 rounded-full text-white font-bold shadow-lg hover:shadow-xl hover:from-secondary hover:to-primary transition-all transform hover:scale-105"
+            onClick={handleAddExercise}
+          >
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add Exercise
+            </div>
+          </button>
         </div>
-      ) : (
-        <div className="text-center py-6 bg-darkgray rounded-lg">
-          <p className="text-gray-400">No exercises planned for this day.</p>
-          <p className="text-sm text-gray-500">Add an exercise to get started.</p>
-        </div>
-      )}
-      
-      {/* Add Exercise Button */}
-      <div className="mt-4 text-center">
-        <button 
-          className="btn-secondary add-button-attention flex items-center justify-center mx-auto"
-          onClick={handleAddExercise}
-        >
-          <span className="mr-1">+</span> Add Exercise
-        </button>
       </div>
       
-      {/* Exercise Selection Modal */}
-      {showExerciseModal && (
-        <div className="popup">
-          <div className="popup-content">
-            <h3 className="text-lg font-bold mb-3">Select Exercise</h3>
-            <div className="max-h-60 overflow-y-auto">
-              {exercises.map(exercise => (
-                <div 
-                  key={exercise.id}
-                  className="exercise-option p-3 border-b border-gray-700 cursor-pointer hover:bg-gray-700"
-                  onClick={() => handleSelectExercise(exercise)}
-                >
-                  <div className="font-medium">{exercise.name}</div>
-                  <div className="text-xs text-gray-400">{exercise.category} • {exercise.sets} sets • {exercise.reps} {exercise.repType}</div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 flex justify-end">
+      {/* Exercise selector modal */}
+      {showExerciseSelector && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-xl border border-gray-700 w-11/12 max-w-md max-h-[80vh] flex flex-col animate-scaleIn">
+            <h3 className="text-lg font-bold mb-4 text-secondary">
+              {editingExerciseIndex !== null ? 'Replace Exercise' : 'Add Exercise'}
+            </h3>
+            
+            {availableExercises.length > 0 ? (
+              <div className="exercise-list overflow-y-auto flex-grow">
+                {availableExercises.map((exercise) => (
+                  <div 
+                    key={exercise.id} 
+                    className="exercise-option p-3 mb-2 bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer transition-colors"
+                    onClick={() => handleSelectExercise(exercise)}
+                  >
+                    <h4 className="font-bold text-white">{exercise.name}</h4>
+                    {exercise.category && (
+                      <span className="text-xs text-gray-400">{exercise.category}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-list flex-grow flex items-center justify-center text-gray-400 text-center p-8">
+                <p>No more exercises available. Create new exercises in the Exercise Info panel.</p>
+              </div>
+            )}
+            
+            <div className="flex justify-end mt-4">
               <button 
-                className="btn bg-gray-700 hover:bg-gray-600"
-                onClick={handleCloseModal}
+                className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+                onClick={handleCloseSelector}
               >
                 Cancel
               </button>

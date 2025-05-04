@@ -18,6 +18,7 @@ const actions = {
   SET_SELECTED_EXERCISE: 'SET_SELECTED_EXERCISE',
   ADD_HISTORY_ENTRY: 'ADD_HISTORY_ENTRY',
   RESET_TO_INITIAL_DATA: 'RESET_TO_INITIAL_DATA',
+  UPDATE_WORKOUT_TYPE: 'UPDATE_WORKOUT_TYPE',
 };
 
 // Storage keys
@@ -169,6 +170,18 @@ function workoutReducer(state, action) {
       };
     }
 
+    case actions.UPDATE_WORKOUT_TYPE: {
+      const { day, workoutType } = action.payload;
+      
+      const updatedWorkoutPlan = WorkoutPlan.fromJSON(state.workoutPlan.toJSON());
+      updatedWorkoutPlan.updateWorkoutType(day, workoutType);
+      
+      return {
+        ...state,
+        workoutPlan: updatedWorkoutPlan,
+      };
+    }
+
     default:
       return state;
   }
@@ -276,6 +289,18 @@ export const WorkoutProvider = ({ children }) => {
     dispatch({ type: actions.RESET_TO_INITIAL_DATA });
   };
 
+  const updateWorkoutTypeForDay = (day, workoutType) => {
+    dispatch({
+      type: actions.UPDATE_WORKOUT_TYPE,
+      payload: { day, workoutType }
+    });
+  };
+
+  const getWorkoutTypeForDay = (day) => {
+    if (!state.workoutPlan) return '';
+    return state.workoutPlan.getWorkoutType(day) || '';
+  };
+
   // Get exercises for the selected day
   const getExercisesForSelectedDay = () => {
     if (!state.workoutPlan || !state.selectedDay) return [];
@@ -309,6 +334,8 @@ export const WorkoutProvider = ({ children }) => {
     setSelectedExercise,
     addHistoryEntry,
     resetToInitialData,
+    getWorkoutTypeForDay,
+    updateWorkoutTypeForDay,
   };
 
   return (

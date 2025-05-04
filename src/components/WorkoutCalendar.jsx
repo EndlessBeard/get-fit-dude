@@ -5,189 +5,224 @@ import {
   getShortDayName, 
   isSameDay, 
   formatDate,
-  getWeekNumber 
+  getWeekNumber,
+  getDayOfWeek
 } from '../utils/dateUtils';
+import '../styles/animations.css';
 
 const WorkoutCalendar = () => {
   const { 
     selectedDay, 
     setSelectedDay, 
     workoutPlan,
-    setWorkoutStartDate
+    setWorkoutStartDate,
+    getWorkoutTypeForDay,
+    updateWorkoutTypeForDay
   } = useWorkout();
   
-  const [isEditingStartDate, setIsEditingStartDate] = useState(false);
-  const [dateInput, setDateInput] = useState({
-    day: '',
-    month: '',
-    year: ''
-  });
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [editingWorkoutType, setEditingWorkoutType] = useState(null);
+  const [workoutTypeValue, setWorkoutTypeValue] = useState('');
   
-  // Get dates for the current week based on the selected day
+  // Get the current week starting from Monday
   const weekDates = getWeekDates(selectedDay);
+  const weekNumber = getWeekNumber(selectedDay);
   
-  // Calculate the current week number
-  const weekNumber = workoutPlan ? getWeekNumber(selectedDay, workoutPlan.startDate) : 1;
+  // Calculate weeks passed since workoutPlan start date
+  let weeksPassed = 0;
+  if (workoutPlan && workoutPlan.startDate) {
+    const startDate = new Date(workoutPlan.startDate);
+    const diffTime = Math.abs(selectedDay - startDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    weeksPassed = Math.floor(diffDays / 7) + 1;
+  }
   
-  // Toggle date editing mode
-  const handleWeekNumberClick = () => {
-    if (isEditingStartDate) return;
-    
-    setIsEditingStartDate(true);
-    
-    // Initialize input with current start date
-    if (workoutPlan && workoutPlan.startDate) {
-      const date = new Date(workoutPlan.startDate);
-      setDateInput({
-        day: date.getDate().toString().padStart(2, '0'),
-        month: (date.getMonth() + 1).toString().padStart(2, '0'),
-        year: date.getFullYear().toString()
-      });
-    }
-  };
-  
-  // Handle date input changes
-  const handleDateInputChange = (field, value) => {
-    setDateInput(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-  
-  // Save the new start date
-  const handleSaveDate = () => {
-    const { day, month, year } = dateInput;
-    
-    if (day && month && year) {
-      try {
-        const newDate = new Date(`${year}-${month}-${day}`);
-        
-        if (isNaN(newDate.getTime())) {
-          throw new Error('Invalid date');
-        }
-        
-        setWorkoutStartDate(newDate);
-        setIsEditingStartDate(false);
-      } catch (error) {
-        console.error('Invalid date:', error);
-        // Simple error handling - reset form
-        setIsEditingStartDate(false);
-      }
-    }
-  };
-  
-  // Cancel date editing
-  const handleCancelEdit = () => {
-    setIsEditingStartDate(false);
-  };
-  
-  // Select a day in the calendar
-  const handleDaySelect = (date) => {
+  // Handle date selection
+  const handleDayClick = (date) => {
     setSelectedDay(date);
   };
 
+  // Handle start date editing
+  const handleStartDateEdit = () => {
+    setShowDatePicker(true);
+  };
+  
+  const handleDatePickerClose = () => {
+    setShowDatePicker(false);
+  };
+  
+  const handleDateChange = (event) => {
+    const dateString = event.target.value;
+    if (dateString) {
+      const newDate = new Date(dateString);
+      setWorkoutStartDate(newDate);
+      setShowDatePicker(false);
+    }
+  };
+
+  // Handle workout type editing
+  const handleWorkoutTypeClick = (day) => {
+    const workoutType = getWorkoutTypeForDay(day);
+    setEditingWorkoutType(day);
+    setWorkoutTypeValue(workoutType || '');
+  };
+  
+  const handleWorkoutTypeChange = (event) => {
+    setWorkoutTypeValue(event.target.value);
+  };
+  
+  const handleWorkoutTypeSave = () => {
+    if (editingWorkoutType) {
+      updateWorkoutTypeForDay(editingWorkoutType, workoutTypeValue);
+      setEditingWorkoutType(null);
+    }
+  };
+  
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleWorkoutTypeSave();
+    } else if (event.key === 'Escape') {
+      setEditingWorkoutType(null);
+    }
+  };
+
   return (
-    <div className="workout-calendar">
-      <h2 className="text-lg font-display font-bold mb-3 text-secondary">
-        Workout Calendar
-      </h2>
-      
-      <div className="grid grid-cols-8 gap-1 text-center">
-        {/* Header row */}
-        <div 
-          className={`calendar-cell p-2 font-bold flex items-center justify-center cursor-pointer ${
-            isEditingStartDate ? 'bg-primary bg-opacity-30' : 'bg-darkgray hover:bg-gray-700'
-          } rounded-md transition-colors`}
-          onClick={handleWeekNumberClick}
-        >
-          Week {weekNumber}
+    <div className="workout-calendar-container mb-6">
+      {/* Week display with gradient background */}
+      <div className="bg-gradient-to-r from-primary/30 to-secondary/20 rounded-xl p-4 shadow-lg border border-gray-700">
+        {/* Week number display with pulsing animation */}
+        <div className="flex justify-between items-center mb-3">
+          <div 
+            className="week-number flex items-center space-x-2 cursor-pointer bg-gray-800 rounded-lg px-3 py-2 hover:bg-gray-700 transition-colors"
+            onClick={handleStartDateEdit}
+          >
+            <span className="text-md font-bold text-secondary">Week</span>
+            <div className="flex items-center bg-gradient-to-r from-primary to-secondary rounded-full w-8 h-8">
+              <span className="text-center w-full text-white font-bold">{weeksPassed}</span>
+            </div>
+          </div>
+          
+          {/* Week start date */}
+          <div className="text-sm text-gray-400">
+            {workoutPlan && workoutPlan.startDate && (
+              <span className="cursor-pointer hover:text-secondary transition-colors" onClick={handleStartDateEdit}>
+                Started: {new Date(workoutPlan.startDate).toLocaleDateString()}
+              </span>
+            )}
+          </div>
         </div>
         
-        {weekDates.map((date) => (
-          <div 
-            key={date.toISOString()} 
-            className={`calendar-cell p-2 font-bold ${
-              isSameDay(date, new Date()) 
-                ? 'text-secondary border-b border-secondary' 
-                : ''
-            }`}
-          >
-            {getShortDayName(date)}
-          </div>
-        ))}
-        
-        {/* Date row */}
-        {isEditingStartDate ? (
-          <div className="col-span-8 p-3 bg-darkgray rounded-md mt-1 animate-fadeIn">
-            <div className="text-sm mb-2 text-secondary">Set Workout Start Date:</div>
-            <div className="flex space-x-2 mb-3">
-              <input
-                type="text"
-                placeholder="DD"
-                className="input w-16 text-center"
-                value={dateInput.day}
-                onChange={(e) => handleDateInputChange('day', e.target.value)}
-                maxLength={2}
-              />
-              <span className="text-xl">/</span>
-              <input
-                type="text"
-                placeholder="MM"
-                className="input w-16 text-center"
-                value={dateInput.month}
-                onChange={(e) => handleDateInputChange('month', e.target.value)}
-                maxLength={2}
-              />
-              <span className="text-xl">/</span>
-              <input
-                type="text"
-                placeholder="YYYY"
-                className="input w-24 text-center"
-                value={dateInput.year}
-                onChange={(e) => handleDateInputChange('year', e.target.value)}
-                maxLength={4}
-              />
+        {/* Day headers */}
+        <div className="grid grid-cols-7 gap-1 mb-2">
+          {weekDates.map((date, index) => (
+            <div 
+              key={`header-${index}`} 
+              className="text-center py-1 text-xs font-bold text-gray-400"
+            >
+              {getShortDayName(date)}
             </div>
-            <div className="flex space-x-2 justify-end">
+          ))}
+        </div>
+        
+        {/* Days of the week with date numbers */}
+        <div className="grid grid-cols-7 gap-1 mb-3">
+          {weekDates.map((date, index) => {
+            const isToday = isSameDay(date, new Date());
+            const isSelected = isSameDay(date, selectedDay);
+            
+            return (
+              <button
+                key={`day-${index}`}
+                className={`
+                  day-button flex items-center justify-center
+                  w-full aspect-square rounded-full 
+                  transition-all transform
+                  ${isSelected ? 'bg-secondary text-white scale-110 font-bold shadow-lg shadow-secondary/30' : 
+                    isToday ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-300'}
+                  hover:bg-opacity-90 hover:scale-105
+                `}
+                onClick={() => handleDayClick(date)}
+              >
+                {date.getDate()}
+              </button>
+            );
+          })}
+        </div>
+        
+        {/* Workout types for each day */}
+        <div className="grid grid-cols-7 gap-1">
+          {weekDates.map((date, index) => {
+            const day = getDayOfWeek(date).toLowerCase();
+            const workoutType = getWorkoutTypeForDay(day);
+            const isEditing = editingWorkoutType === day;
+            
+            return (
+              <div key={`type-${index}`} className="text-center">
+                {isEditing ? (
+                  <div className="flex flex-col space-y-1">
+                    <input
+                      type="text"
+                      value={workoutTypeValue}
+                      onChange={handleWorkoutTypeChange}
+                      onKeyDown={handleKeyDown}
+                      onBlur={handleWorkoutTypeSave}
+                      className="bg-gray-900 border border-gray-600 rounded px-2 py-1 text-xs w-full focus:outline-none focus:border-secondary"
+                      autoFocus
+                      placeholder="Workout type"
+                    />
+                    <button 
+                      onClick={handleWorkoutTypeSave}
+                      className="bg-secondary text-white text-xs rounded px-2 py-1 hover:bg-opacity-80"
+                    >
+                      Save
+                    </button>
+                  </div>
+                ) : (
+                  <div 
+                    className={`
+                      workout-type text-xs py-1 px-2 rounded-md cursor-pointer
+                      transition-transform hover:scale-105
+                      ${workoutType ? 'bg-primary bg-opacity-40' : 'bg-gray-800'}
+                      ${isSameDay(date, selectedDay) ? 'border border-secondary' : ''}
+                    `}
+                    onClick={() => handleWorkoutTypeClick(day)}
+                  >
+                    {workoutType || 'Rest Day'}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      
+      {/* Date picker modal */}
+      {showDatePicker && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-xl border border-gray-700 w-10/12 max-w-md animate-scaleIn">
+            <h3 className="text-lg font-bold mb-4 text-secondary">Set Workout Start Date</h3>
+            <p className="text-sm text-gray-300 mb-4">
+              This date determines the start of your workout plan and how weeks are calculated.
+            </p>
+            
+            <input 
+              type="date"
+              className="w-full bg-gray-800 border border-gray-600 rounded p-3 text-white mb-4 focus:outline-none focus:border-secondary"
+              defaultValue={workoutPlan && workoutPlan.startDate ? new Date(workoutPlan.startDate).toISOString().split('T')[0] : ''}
+              onChange={handleDateChange}
+            />
+            
+            <div className="flex justify-end">
               <button 
-                className="btn bg-gray-600 hover:bg-gray-700 text-sm px-3 py-1"
-                onClick={handleCancelEdit}
+                className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+                onClick={handleDatePickerClose}
               >
                 Cancel
               </button>
-              <button 
-                className="btn-primary text-sm px-3 py-1"
-                onClick={handleSaveDate}
-              >
-                Save
-              </button>
             </div>
           </div>
-        ) : (
-          <>
-            <div 
-              className="calendar-cell p-2 bg-darkgray rounded-md flex items-center justify-center"
-              title="Click Week number to change start date"
-            >
-              <span className="text-xs text-gray-400">
-                {workoutPlan ? formatDate(workoutPlan.startDate) : 'No date'}
-              </span>
-            </div>
-            
-            {weekDates.map((date) => (
-              <div 
-                key={date.toISOString() + "-date"} 
-                className={`calendar-day ${
-                  isSameDay(date, selectedDay) ? 'calendar-day-selected' : ''
-                }`}
-                onClick={() => handleDaySelect(date)}
-              >
-                {date.getDate()}
-              </div>
-            ))}
-          </>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
