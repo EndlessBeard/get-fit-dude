@@ -3,33 +3,64 @@ import WorkoutPlan from '../models/WorkoutPlan';
 
 /**
  * Initial exercise data for the app
+ * Adapted from workout_data.js
  */
 export const initialExercises = [
-  // Upper Body exercises
+  // Lower Body exercises
   new ExerciseData({
     id: 'ex-001',
-    name: 'Push-ups',
+    name: 'Squats',
     sets: 3,
     repType: 'count',
-    reps: 12,
-    category: 'Upper Body',
-    videoUrl: 'https://example.com/videos/pushups.mp4',
-    variations: ['Wide grip', 'Diamond', 'Incline', 'Decline'],
+    reps: 10,
+    category: 'Lower Body',
+    videoUrl: 'https://www.youtube.com/watch?v=aclHkVaku9U',
+    variations: ['Chair-assisted squats', 'Box squats', 'Jump squats'],
     history: [
-      { date: new Date(2025, 4, 1), sets: 3, reps: 10 },
-      { date: new Date(2025, 4, 3), sets: 3, reps: 12 }
+      { date: new Date(2025, 4, 1), sets: 2, reps: 8 },
+      { date: new Date(2025, 4, 3), sets: 3, reps: 10 }
     ]
   }),
   
   new ExerciseData({
     id: 'ex-002',
-    name: 'Pull-ups',
+    name: 'Lunges',
+    sets: 3,
+    repType: 'count',
+    reps: 12,
+    category: 'Lower Body',
+    videoUrl: 'https://www.youtube.com/watch?v=QOVaHwm-Q6U',
+    variations: ['Static lunges', 'Walking lunges', 'Reverse lunges'],
+    history: [
+      { date: new Date(2025, 4, 1), sets: 2, reps: 10 },
+      { date: new Date(2025, 4, 3), sets: 3, reps: 12 }
+    ]
+  }),
+  
+  new ExerciseData({
+    id: 'ex-003',
+    name: 'Lying Glute Bridges',
+    sets: 3,
+    repType: 'count',
+    reps: 10,
+    category: 'Lower Body',
+    videoUrl: 'https://www.youtube.com/watch?v=8bbE64NuDTU',
+    variations: ['Feet elevated on a chair/bench', 'Single-leg glute bridge (advanced)'],
+    history: [
+      { date: new Date(2025, 4, 1), sets: 2, reps: 8 },
+      { date: new Date(2025, 4, 3), sets: 3, reps: 10 }
+    ]
+  }),
+  
+  new ExerciseData({
+    id: 'ex-004',
+    name: 'Good Mornings',
     sets: 3,
     repType: 'count',
     reps: 8,
-    category: 'Upper Body',
-    videoUrl: 'https://example.com/videos/pullups.mp4',
-    variations: ['Wide grip', 'Chin-ups', 'Neutral grip'],
+    category: 'Lower Body',
+    videoUrl: 'https://www.youtube.com/watch?v=vKPGe8zb2S4',
+    variations: ['Bodyweight good mornings', 'Banded good mornings'],
     history: [
       { date: new Date(2025, 4, 1), sets: 2, reps: 6 },
       { date: new Date(2025, 4, 3), sets: 3, reps: 8 }
@@ -37,127 +68,137 @@ export const initialExercises = [
   }),
   
   new ExerciseData({
-    id: 'ex-003',
-    name: 'Dumbbell Shoulder Press',
+    id: 'ex-005',
+    name: 'Standing Calf Raises',
+    sets: 3,
+    repType: 'count',
+    reps: 15,
+    category: 'Lower Body',
+    videoUrl: 'https://www.youtube.com/watch?v=-M4-G8p8fmc',
+    variations: ['Single-leg calf raises', 'Toe-elevated calf raises'],
+    history: [
+      { date: new Date(2025, 4, 1), sets: 2, reps: 12 },
+      { date: new Date(2025, 4, 3), sets: 3, reps: 15 }
+    ]
+  }),
+  
+  // Upper Body exercises
+  new ExerciseData({
+    id: 'ex-006',
+    name: 'Push-Ups',
+    sets: 3,
+    repType: 'count',
+    reps: 8,
+    category: 'Upper Body',
+    videoUrl: 'https://www.youtube.com/watch?v=IODxDxX7oi4',
+    variations: ['Knee push-ups', 'Incline push-ups', 'Diamond push-ups'],
+    history: [
+      { date: new Date(2025, 4, 2), sets: 2, reps: 6 },
+      { date: new Date(2025, 4, 4), sets: 3, reps: 8 }
+    ]
+  }),
+  
+  new ExerciseData({
+    id: 'ex-007',
+    name: 'Chair Dips',
     sets: 3,
     repType: 'count',
     reps: 10,
     category: 'Upper Body',
-    videoUrl: 'https://example.com/videos/shoulder-press.mp4',
-    variations: ['Seated', 'Standing', 'Arnold press'],
-    history: [
-      { date: new Date(2025, 4, 1), sets: 3, reps: 8 },
-      { date: new Date(2025, 4, 3), sets: 3, reps: 10 }
-    ]
-  }),
-  
-  // Lower Body exercises
-  new ExerciseData({
-    id: 'ex-004',
-    name: 'Squats',
-    sets: 4,
-    repType: 'count',
-    reps: 15,
-    category: 'Lower Body',
-    videoUrl: 'https://example.com/videos/squats.mp4',
-    variations: ['Bodyweight', 'Goblet', 'Bulgarian split'],
-    history: [
-      { date: new Date(2025, 4, 2), sets: 3, reps: 12 },
-      { date: new Date(2025, 4, 4), sets: 4, reps: 15 }
-    ]
-  }),
-  
-  new ExerciseData({
-    id: 'ex-005',
-    name: 'Lunges',
-    sets: 3,
-    repType: 'count',
-    reps: 10,
-    category: 'Lower Body',
-    videoUrl: 'https://example.com/videos/lunges.mp4',
-    variations: ['Walking', 'Reverse', 'Lateral'],
+    videoUrl: 'https://www.youtube.com/watch?v=0326dy_-CzM',
+    variations: ['Bench dips', 'Legs elevated dips'],
     history: [
       { date: new Date(2025, 4, 2), sets: 2, reps: 8 },
       { date: new Date(2025, 4, 4), sets: 3, reps: 10 }
     ]
   }),
   
-  new ExerciseData({
-    id: 'ex-006',
-    name: 'Deadlifts',
-    sets: 3,
-    repType: 'count',
-    reps: 8,
-    category: 'Lower Body',
-    videoUrl: 'https://example.com/videos/deadlifts.mp4',
-    variations: ['Conventional', 'Romanian', 'Sumo'],
-    history: [
-      { date: new Date(2025, 4, 2), sets: 3, reps: 6 },
-      { date: new Date(2025, 4, 4), sets: 3, reps: 8 }
-    ]
-  }),
-  
   // Core exercises
   new ExerciseData({
-    id: 'ex-007',
-    name: 'Plank',
+    id: 'ex-008',
+    name: 'Plank Hold',
     sets: 3,
     repType: 'time',
-    reps: 30,
-    category: 'Core',
-    videoUrl: 'https://example.com/videos/plank.mp4',
-    variations: ['Forearm', 'Side plank', 'Dynamic plank'],
-    history: [
-      { date: new Date(2025, 4, 3), sets: 3, reps: 20 },
-      { date: new Date(2025, 4, 5), sets: 3, reps: 30 }
-    ]
-  }),
-  
-  new ExerciseData({
-    id: 'ex-008',
-    name: 'Crunches',
-    sets: 3,
-    repType: 'count',
     reps: 20,
     category: 'Core',
-    videoUrl: 'https://example.com/videos/crunches.mp4',
-    variations: ['Basic', 'Bicycle', 'Reverse'],
+    videoUrl: 'https://www.youtube.com/watch?v=pSHjTRCQxIw',
+    variations: ['Forearm plank', 'Inclined plank (hands on bench)'],
     history: [
-      { date: new Date(2025, 4, 3), sets: 2, reps: 15 },
-      { date: new Date(2025, 4, 5), sets: 3, reps: 20 }
+      { date: new Date(2025, 4, 2), sets: 2, reps: 15 },
+      { date: new Date(2025, 4, 4), sets: 3, reps: 20 }
     ]
   }),
   
   new ExerciseData({
     id: 'ex-009',
+    name: 'Side Plank',
+    sets: 3,
+    repType: 'time',
+    reps: 15,
+    category: 'Core',
+    videoUrl: 'https://www.youtube.com/watch?v=K1JYl9T4l2A',
+    variations: ['Modified side plank (bottom knee bent)', 'Forearm on a bench/chair'],
+    history: [
+      { date: new Date(2025, 4, 2), sets: 2, reps: 10 },
+      { date: new Date(2025, 4, 4), sets: 3, reps: 15 }
+    ]
+  }),
+  
+  new ExerciseData({
+    id: 'ex-010',
     name: 'Russian Twists',
     sets: 3,
     repType: 'count',
-    reps: 15,
+    reps: 12,
     category: 'Core',
-    videoUrl: 'https://example.com/videos/russian-twists.mp4',
-    variations: ['Bodyweight', 'Weighted', 'Medicine ball'],
+    videoUrl: 'https://www.youtube.com/watch?v=JyUqwkVpsi8',
+    variations: ['Feet on the floor', 'Feet elevated', 'Weighted twists'],
     history: [
-      { date: new Date(2025, 4, 3), sets: 2, reps: 12 },
-      { date: new Date(2025, 4, 5), sets: 3, reps: 15 }
+      { date: new Date(2025, 4, 2), sets: 2, reps: 10 },
+      { date: new Date(2025, 4, 4), sets: 3, reps: 12 }
+    ]
+  }),
+  
+  new ExerciseData({
+    id: 'ex-011',
+    name: 'Supermans',
+    sets: 3,
+    repType: 'count',
+    reps: 10,
+    category: 'Core',
+    videoUrl: 'https://www.youtube.com/watch?v=cc6UVRS7PW4',
+    variations: ['Lift only arms, then only legs, alternate', 'Quadruped bird-dog (related movement)'],
+    history: [
+      { date: new Date(2025, 4, 2), sets: 2, reps: 8 },
+      { date: new Date(2025, 4, 4), sets: 3, reps: 10 }
     ]
   })
 ];
 
 /**
  * Initial workout plan data
+ * Based on workout_data.js weekly schedule
  */
 export const initialWorkoutPlan = new WorkoutPlan({
   id: 'plan-001',
   startDate: new Date(2025, 4, 1), // May 1, 2025
   days: {
-    monday: ['ex-001', 'ex-002', 'ex-003'], // Upper Body
-    tuesday: ['ex-004', 'ex-005', 'ex-006'], // Lower Body
-    wednesday: ['ex-007', 'ex-008', 'ex-009'], // Core
-    thursday: ['ex-001', 'ex-002', 'ex-003'], // Upper Body
-    friday: ['ex-004', 'ex-005', 'ex-006'], // Lower Body
-    saturday: ['ex-007', 'ex-008', 'ex-009'], // Core
+    monday: ['ex-001', 'ex-008', 'ex-003'], // Squats, Plank Hold, Lying Glute Bridges
+    tuesday: ['ex-006', 'ex-008', 'ex-007'], // Push-Ups, Plank Hold, Chair Dips
+    wednesday: [], // Rest day
+    thursday: ['ex-001', 'ex-002', 'ex-004'], // Squats, Lunges, Good Mornings
+    friday: ['ex-006', 'ex-008', 'ex-010', 'ex-005'], // Push-Ups, Plank Hold, Russian Twists, Standing Calf Raises
+    saturday: [], // Optional activity
     sunday: [] // Rest day
+  },
+  workoutTypes: {
+    monday: 'Lower Body + Core',
+    tuesday: 'Upper Body + Core',
+    wednesday: 'Rest Day',
+    thursday: 'Lower Body + Core',
+    friday: 'Upper Body + Core',
+    saturday: 'Optional Activity',
+    sunday: 'Rest Day'
   }
 });
 
