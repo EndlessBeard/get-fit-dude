@@ -18,6 +18,10 @@ const ExerciseInfo = () => {
   
   // New variation input
   const [newVariation, setNewVariation] = useState('');
+  // Track video loading state
+  const [videoLoading, setVideoLoading] = useState(false);
+  // Track video playback error
+  const [videoError, setVideoError] = useState(false);
   
   // Update form data when selected exercise changes
   useEffect(() => {
@@ -31,6 +35,8 @@ const ExerciseInfo = () => {
         videoUrl: selectedExercise.videoUrl || '',
         variations: [...(selectedExercise.variations || [])]
       });
+      setVideoError(false);
+      setVideoLoading(false);
     }
   }, [selectedExercise]);
   
@@ -77,30 +83,91 @@ const ExerciseInfo = () => {
     }));
   };
   
+  // Handle adding variation with enter key
+  const handleVariationKeyPress = (e) => {
+    if (e.key === 'Enter' && newVariation.trim()) {
+      e.preventDefault();
+      handleAddVariation();
+    }
+  };
+  
+  // Video loading handlers
+  const handleVideoLoad = () => {
+    setVideoLoading(false);
+    setVideoError(false);
+  };
+  
+  const handleVideoError = () => {
+    setVideoLoading(false);
+    setVideoError(true);
+  };
+  
+  // Extract YouTube ID from URL
+  const getYoutubeId = (url) => {
+    if (!url) return null;
+    
+    // Handle youtube.com/watch?v= format
+    let match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
+    return match ? match[1] : null;
+  };
+  
   // Render video or placeholder
   const renderVideo = () => {
     if (selectedExercise?.videoUrl) {
-      if (selectedExercise.videoUrl.includes('youtube.com') || selectedExercise.videoUrl.includes('youtu.be')) {
-        // Extract YouTube ID and embed
-        const videoId = selectedExercise.videoUrl.split('v=')[1] || selectedExercise.videoUrl.split('/').pop();
+      setVideoLoading(true);
+      
+      const youtubeId = getYoutubeId(selectedExercise.videoUrl);
+      
+      if (youtubeId) {
+        // YouTube embed
         return (
-          <iframe 
-            className="w-full h-48 rounded-md"
-            src={`https://www.youtube.com/embed/${videoId}`} 
-            title={`${selectedExercise.name} video`}
-            allowFullScreen
-          ></iframe>
+          <div className="video-container relative">
+            {videoLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+                <div className="loading-spinner"></div>
+              </div>
+            )}
+            <iframe 
+              className="w-full h-48 rounded-md"
+              src={`https://www.youtube.com/embed/${youtubeId}`} 
+              title={`${selectedExercise.name} video`}
+              allowFullScreen
+              onLoad={handleVideoLoad}
+              onError={handleVideoError}
+            ></iframe>
+          </div>
         );
       } else {
         // Regular video
         return (
-          <video 
-            className="w-full h-48 rounded-md"
-            src={selectedExercise.videoUrl}
-            controls
-          ></video>
+          <div className="video-container relative">
+            {videoLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+                <div className="loading-spinner"></div>
+              </div>
+            )}
+            <video 
+              className="w-full h-48 rounded-md"
+              src={selectedExercise.videoUrl}
+              controls
+              onLoadedData={handleVideoLoad}
+              onError={handleVideoError}
+            ></video>
+          </div>
         );
       }
+    }
+    
+    // Error state
+    if (videoError) {
+      return (
+        <div className="w-full h-48 bg-gray-800 rounded-md flex items-center justify-center text-red-400">
+          <div className="text-center">
+            <p className="mb-1">⚠️ Error loading video</p>
+            <p className="text-xs">Please check the URL and try again</p>
+          </div>
+        </div>
+      );
     }
     
     // Placeholder
@@ -210,14 +277,30 @@ const ExerciseInfo = () => {
             
             <div className="mb-4">
               <label className="block text-sm text-gray-400 mb-1">Video URL</label>
-              <input
-                type="url"
-                name="videoUrl"
-                className="w-full bg-gray-900 text-white p-2 rounded-md"
-                value={formData.videoUrl}
-                onChange={handleChange}
-                placeholder="https://example.com/video.mp4"
-              />
+              <div className="flex space-x-2">
+                <input
+                  type="url"
+                  name="videoUrl"
+                  className="flex-1 bg-gray-900 text-white p-2 rounded-md"
+                  value={formData.videoUrl}
+                  onChange={handleChange}
+                  placeholder="YouTube URL or direct video link"
+                />
+                <button 
+                  type="button"
+                  className="bg-blue-600 hover:bg-blue-700 px-3 rounded-md"
+                  title="Test video URL"
+                  onClick={() => {
+                    setVideoLoading(true);
+                    setVideoError(false);
+                  }}
+                >
+                  Test
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Supports YouTube links or direct video URLs
+              </p>
             </div>
             
             <div className="mb-4">
@@ -228,6 +311,7 @@ const ExerciseInfo = () => {
                   className="flex-1 bg-gray-900 text-white p-2 rounded-md"
                   value={newVariation}
                   onChange={(e) => setNewVariation(e.target.value)}
+                  onKeyPress={handleVariationKeyPress}
                   placeholder="New variation"
                 />
                 <button
@@ -239,22 +323,26 @@ const ExerciseInfo = () => {
                 </button>
               </div>
               
-              <ul className="variations-list">
-                {formData.variations.map((variation, index) => (
-                  <li 
-                    key={index}
-                    className="flex justify-between items-center bg-gray-800 p-2 rounded-md mb-1"
-                  >
-                    <span>{variation}</span>
-                    <button
-                      type="button"
-                      className="text-xs bg-red-700 hover:bg-red-600 p-1 rounded"
-                      onClick={() => handleRemoveVariation(index)}
+              <ul className="variations-list max-h-40 overflow-y-auto">
+                {formData.variations.length === 0 ? (
+                  <li className="text-gray-500 text-sm p-2">No variations added yet</li>
+                ) : (
+                  formData.variations.map((variation, index) => (
+                    <li 
+                      key={index}
+                      className="flex justify-between items-center bg-gray-800 p-2 rounded-md mb-1"
                     >
-                      ✖️
-                    </button>
-                  </li>
-                ))}
+                      <span>{variation}</span>
+                      <button
+                        type="button"
+                        className="text-xs bg-red-700 hover:bg-red-600 p-1 rounded"
+                        onClick={() => handleRemoveVariation(index)}
+                      >
+                        ✖️
+                      </button>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
             
@@ -293,7 +381,7 @@ const ExerciseInfo = () => {
             {selectedExercise.variations && selectedExercise.variations.length > 0 && (
               <div>
                 <p className="text-sm text-gray-400 mb-2">Variations</p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-1">
                   {selectedExercise.variations.map((variation, index) => (
                     <span 
                       key={index}
