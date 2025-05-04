@@ -1,0 +1,185 @@
+/* animations.css */
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Slide In Animation */
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-in-out;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 1s infinite;
+}
+
+/* Under Glow Animation */
+@keyframes underGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 1);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+}
+
+.under-glow {
+    animation: underGlow 1s infinite;
+}
+
+/* Timer Flash Animation */
+@keyframes timerFlash {
+    0%, 100% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: red;
+    }
+}
+
+.timer-flash {
+    animation: timerFlash 0.5s ease-in-out;
+}
+
+/* Additional animations for Get Fit Dude */
+
+/* Button glow pulse effect when clicked */
+@keyframes buttonGlowPulse {
+  0% {
+    box-shadow: 0 0 5px rgba(107, 70, 193, 0.7), 0 0 10px rgba(246, 173, 85, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(107, 70, 193, 0.9), 0 0 25px rgba(246, 173, 85, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(107, 70, 193, 0.7), 0 0 10px rgba(246, 173, 85, 0.5);
+  }
+}
+
+.btn-glow-click {
+  animation: buttonGlowPulse 0.8s ease-out;
+}
+
+/* Popup ease in and out */
+@keyframes popupFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popupSlideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes popupSlideOut {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(50px); opacity: 0; }
+}
+
+.popup-enter {
+  animation: popupFadeIn 0.3s ease-out;
+}
+
+.popup-content-enter {
+  animation: popupSlideUp 0.4s ease-out;
+}
+
+.popup-exit {
+  animation: popupFadeIn 0.3s ease-out reverse;
+}
+
+.popup-content-exit {
+  animation: popupSlideOut 0.3s ease-in;
+}
+
+/* Timer countdown flash effect */
+@keyframes countdownFlash {
+  0% { color: white; transform: scale(1); }
+  50% { color: #f6ad55; transform: scale(1.1); }
+  100% { color: white; transform: scale(1); }
+}
+
+.timer-countdown-flash {
+  animation: countdownFlash 0.5s ease-in-out;
+}
+
+/* Exercise selection hover effect */
+@keyframes exerciseSelectionGlow {
+  0% { background-color: rgba(107, 70, 193, 0.1); }
+  100% { background-color: rgba(107, 70, 193, 0.2); }
+}
+
+.exercise-hover {
+  animation: exerciseSelectionGlow 0.5s infinite alternate;
+}
+
+/* Swipe interaction feedback */
+@keyframes swipeAnimation {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-5px); }
+  75% { transform: translateY(5px); }
+  100% { transform: translateY(0); }
+}
+
+.swipe-feedback {
+  animation: swipeAnimation 0.3s ease-in-out;
+}
+
+/* Graph data point highlight */
+@keyframes dataPointPulse {
+  0% { r: 3; }
+  50% { r: 5; }
+  100% { r: 3; }
+}
+
+.data-point-highlight {
+  animation: dataPointPulse 1s infinite;
+}
+
+/* Add Exercise button effect */
+@keyframes addButtonPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(246, 173, 85, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(246, 173, 85, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(246, 173, 85, 0); }
+}
+
+.add-button-attention {
+  animation: addButtonPulse 2s infinite;
+}

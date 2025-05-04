@@ -1,0 +1,54 @@
+{
+  "name": "get-fit-dude",
+  "version": "1.0.0",
+  "description": "A mobile web app for customizable workout plans and timers.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "keywords": [
+    "fitness",
+    "workout",
+    "react",
+    "mobile"
+  ],
+  "author": "Rachel Hoover",
+  "license": "MIT",
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@use-gesture/react": "^10.3.1",
+    "d3": "^7.0.0",
+    "hammerjs": "^2.0.8",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "5.0.0",
+    "tailwindcss": "^2.2.19"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "cssnano": "^7.0.6",
+    "postcss": "^8.3.6",
+    "postcss-import": "^16.1.0",
+    "postcss-preset-env": "^10.1.6"
+  },
+  "homepage": "http://yourhomepage.com",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/yourusername/get-fit-dude.git"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

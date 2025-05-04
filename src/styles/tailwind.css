@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  
+  body {
+    @apply bg-white text-gray-900 dark:bg-dark dark:text-white;
+    @apply transition-colors duration-200;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+}
+
+/* Custom components */
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-opacity-90;
+  }
+
+  .btn-primary:active {
+    @apply bg-opacity-100;
+  }
+
+  .dark .btn-primary:hover {
+    @apply shadow-glow;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-secondary text-white hover:bg-opacity-90;
+  }
+
+  .btn-secondary:active {
+    @apply bg-opacity-100;
+  }
+
+  .dark .btn-secondary:hover {
+    @apply shadow-glow;
+  }
+  
+  .panel {
+    @apply bg-gray-100 dark:bg-darkgray rounded-lg p-4 shadow-md;
+    @apply transition-all duration-300;
+  }
+  
+  .input {
+    @apply bg-white dark:bg-lightgray border border-gray-300 dark:border-gray-700;
+    @apply rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary;
+    @apply transition-all duration-200;
+  }
+  
+  .calendar-day {
+    @apply cursor-pointer p-2 text-center rounded-md hover:bg-gray-200 dark:hover:bg-gray-700;
+    @apply transition-all duration-200;
+  }
+  
+  .calendar-day-selected {
+    @apply bg-primary text-white hover:bg-primary;
+    @apply dark:shadow-glow;
+  }
+  
+  .exercise-row {
+    @apply flex items-center py-2 border-b border-gray-200 dark:border-gray-700;
+    @apply hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors;
+  }
+  
+  .timer-display {
+    @apply text-4xl font-bold text-center;
+  }
+  
+  .timer-control-btn {
+    @apply btn-primary w-12 h-12 flex items-center justify-center rounded-full;
+  }
+
+  .glow-effect {
+    @apply hover:shadow-glow focus:shadow-glow-strong;
+    @apply transition-all duration-300;
+  }
+
+  .popup {
+    @apply fixed inset-0 flex items-center justify-center z-50;
+    @apply bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm;
+    @apply animate-fadeIn;
+  }
+  
+  .popup-content {
+    @apply bg-white dark:bg-darkgray rounded-lg p-5 shadow-xl max-w-md w-full;
+    @apply animate-slideIn;
+  }
+}
+
+/* Make the app default to dark mode */
+:root {
+  color-scheme: dark;
+}
+
+html {
+  @apply dark;
+}

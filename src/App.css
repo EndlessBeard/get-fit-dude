@@ -1,0 +1,76 @@
+/* App.css - Custom styles for the App component */
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #1a1a2e; /* Dark background for dark mode */
+    color: #eaeaea; /* Light text color */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #ffcc00; /* Gold color for headings */
+}
+
+a {
+    color: #ff6f61; /* Orange color for links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.button {
+    background-color: #ff6f61; /* Button background color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #ffcc00; /* Button hover color */
+}
+
+.popup {
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background for popups */
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.timer {
+    font-size: 2em;
+    color: #ffcc00; /* Timer color */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #eaeaea; /* Light border for table */
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
+    background-color: #ff6f61; /* Header background color */
+    color: white;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1a1a2e; /* Dark background for footer */
+    color: #eaeaea; /* Light text color */
+}
