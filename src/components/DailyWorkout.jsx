@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useWorkout } from '../context/WorkoutContext';
 import { getDayOfWeek } from '../utils/dateUtils';
-import { useGestureDetection } from '../hooks/useGestureDetection';
+import useGestureDetection from '../hooks/useGestureDetection';
 import '../styles/animations.css';
 
 const DailyWorkout = () => {
   const { 
     selectedDay, 
-    getExercisesForDay, 
     workoutPlan, 
+    exercises, // Make sure you're getting the exercises array
     setSelectedExercise,
     addExerciseToDay,
     updateExercise,
@@ -27,8 +27,21 @@ const DailyWorkout = () => {
   // Get the workoutType for the selected day
   const workoutType = getWorkoutTypeForDay(selectedDayName);
   
-  // Get exercises for the selected day
-  const exercisesForDay = getExercisesForDay(selectedDay);
+  // Get exercises for the selected day - FIXED VERSION
+  const exercisesForDay = (() => {
+    // Make sure workoutPlan exists
+    if (!workoutPlan || !workoutPlan.days) {
+      return [];
+    }
+    
+    // Get the exercise IDs for the selected day
+    const exerciseIds = workoutPlan.days[selectedDayName] || [];
+    
+    // Map IDs to actual exercise objects
+    return exerciseIds
+      .map(id => exercises.find(ex => ex.id === id))
+      .filter(Boolean); // Filter out any undefined results
+  })();
   
   // Initialize gesture detection for swipe controls
   const { 
