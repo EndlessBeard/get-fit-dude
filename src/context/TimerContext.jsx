@@ -327,8 +327,10 @@ export const TimerProvider = ({ children }) => {
   const currentStage = state.stages[state.currentStageIndex] || null;
   const formattedTime = formatTime(state.remainingTime);
   const totalDuration = getTotalDuration(state.stages);
-  const progress = totalDuration > 0 
-    ? ((totalDuration - state.remainingTime) / totalDuration) * 100 
+  
+  // Calculate progress as percentage of time remaining for the current stage (100% to 0%)
+  const progress = (currentStage && currentStage.duration > 0) 
+    ? (state.remainingTime / currentStage.duration) * 100 
     : 0;
 
   // Value to be provided to consumers

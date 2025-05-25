@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useWorkout } from '../context/WorkoutContext';
 import { getDayOfWeek } from '../utils/dateUtils';
 import useGestureDetection from '../hooks/useGestureDetection';
-import DebugPanel from './DebugPanel';
 import '../styles/animations.css';
 
 const DailyWorkout = () => {
@@ -66,15 +65,8 @@ const DailyWorkout = () => {
     // Get all available exercises that aren't already in today's workout
     const currentExerciseIds = new Set(exercisesForDay.map(ex => ex.id));
     
-    // Log what we're working with
-    console.log('All exercises:', exercises);
-    console.log('Current day exercises:', exercisesForDay);
-    console.log('Current day IDs:', Array.from(currentExerciseIds));
-    
     // Filter for exercises not already in today's workout
     const availableToAdd = exercises.filter(ex => !currentExerciseIds.has(ex.id));
-    
-    console.log('Available to add:', availableToAdd);
     
     setAvailableExercises(availableToAdd);
     setShowExerciseSelector(true);
@@ -83,21 +75,13 @@ const DailyWorkout = () => {
   const handleSelectExercise = (exercise) => {
     if (editingExerciseIndex !== null) {
       // Replace existing exercise
-      console.log(`Replacing exercise at index ${editingExerciseIndex} with ${exercise.id}`);
-      
-      // Get the exercise to replace
       const oldExercise = exercisesForDay[editingExerciseIndex];
       if (oldExercise) {
-        console.log(`Old exercise: ${oldExercise.id}`);
         replaceExerciseInDay(selectedDayName, oldExercise.id, exercise.id);
-      } else {
-        console.error(`No exercise found at index ${editingExerciseIndex}`);
       }
-      
       setEditingExerciseIndex(null);
     } else {
       // Add new exercise
-      console.log(`Adding new exercise: ${exercise.id}`);
       addExerciseToDay(selectedDayName, exercise.id);
     }
     setShowExerciseSelector(false);
@@ -111,11 +95,6 @@ const DailyWorkout = () => {
   const handleEditExerciseClick = (index) => {
     setEditingExerciseIndex(index);
     
-    // Log what we're working with
-    console.log('Edit mode - all exercises:', exercises);
-    console.log('Edit mode - index:', index);
-    console.log('Edit mode - exercise to replace:', exercisesForDay[index]);
-    
     // When replacing, we want to show all exercises, not just those of the same type
     // This gives more flexibility for the user
     setAvailableExercises(exercises || []);
@@ -125,10 +104,7 @@ const DailyWorkout = () => {
   const handleRemoveExercise = (index) => {
     const exerciseToRemove = exercisesForDay[index];
     if (exerciseToRemove) {
-      console.log(`Removing exercise: ${exerciseToRemove.id}`);
       removeExerciseFromDay(selectedDayName, exerciseToRemove.id);
-    } else {
-      console.error(`No exercise found at index ${index}`);
     }
   };
   
@@ -139,7 +115,6 @@ const DailyWorkout = () => {
 
   return (
     <div className="daily-workout-container mb-6">
-      <DebugPanel />
       <div className="bg-gradient-to-r from-primary/30 to-secondary/20 rounded-xl p-4 shadow-lg border border-gray-700">
         {/* Day title with workout type */}
         <div className="mb-4 flex justify-between items-center">

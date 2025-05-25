@@ -35,8 +35,15 @@ const ExerciseInfo = () => {
         videoUrl: selectedExercise.videoUrl || '',
         variations: [...(selectedExercise.variations || [])]
       });
+      
+      // Set loading state for video when exercise changes
+      if (selectedExercise.videoUrl) {
+        setVideoLoading(true);
+      } else {
+        setVideoLoading(false);
+      }
+      
       setVideoError(false);
-      setVideoLoading(false);
     }
   }, [selectedExercise]);
   
@@ -114,7 +121,8 @@ const ExerciseInfo = () => {
   // Render video or placeholder
   const renderVideo = () => {
     if (selectedExercise?.videoUrl) {
-      setVideoLoading(true);
+      // Don't set loading state here - it causes infinite re-renders
+      // setVideoLoading is called in useEffect when selectedExercise changes
       
       const youtubeId = getYoutubeId(selectedExercise.videoUrl);
       
@@ -291,8 +299,11 @@ const ExerciseInfo = () => {
                   className="bg-blue-600 hover:bg-blue-700 px-3 rounded-md"
                   title="Test video URL"
                   onClick={() => {
-                    setVideoLoading(true);
-                    setVideoError(false);
+                    // Only update the state if the URL is not empty
+                    if (formData.videoUrl) {
+                      setVideoLoading(true);
+                      setVideoError(false);
+                    }
                   }}
                 >
                   Test
