@@ -200,7 +200,7 @@ export const WorkoutProvider = ({ children }) => {
     const storedWorkoutPlan = localStorageUtils.getItem(STORAGE_KEYS.WORKOUT_PLAN);
     const storedSelectedDay = localStorageUtils.getItem(STORAGE_KEYS.SELECTED_DAY);
     
-    if (storedExercises && storedWorkoutPlan) {
+    if (storedExercises && storedExercises.length > 0 && storedWorkoutPlan) {
       // Parse stored data into proper objects
       const exercises = storedExercises.map(ex => ExerciseData.fromJSON(ex));
       const workoutPlan = WorkoutPlan.fromJSON(storedWorkoutPlan);
@@ -213,6 +213,7 @@ export const WorkoutProvider = ({ children }) => {
       }
     } else {
       // Use default data if nothing is stored
+      console.log("Initializing with default data");
       const { exercises, workoutPlan } = getInitialData();
       dispatch({ type: actions.SET_EXERCISES, payload: exercises });
       dispatch({ type: actions.SET_WORKOUT_PLAN, payload: workoutPlan });
