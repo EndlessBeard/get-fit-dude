@@ -162,6 +162,43 @@
   animation: swipeAnimation 0.3s ease-in-out;
 }
 
+/* Swipe value increase/decrease feedback */
+@keyframes swipeUpAnimation {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-10px); opacity: 0; }
+}
+
+@keyframes swipeDownAnimation {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+
+.swipe-value-change {
+  position: relative;
+}
+
+.swipe-value-change::after {
+  content: attr(data-change);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.swipe-value-change.increase::after {
+  content: "+1";
+  color: #6b46c1; /* secondary color */
+  animation: swipeUpAnimation 0.5s forwards;
+}
+
+.swipe-value-change.decrease::after {
+  content: "-1";
+  color: #f6ad55; /* primary color */
+  animation: swipeDownAnimation 0.5s forwards;
+}
+
 /* Graph data point highlight */
 @keyframes dataPointPulse {
   0% { r: 3; }

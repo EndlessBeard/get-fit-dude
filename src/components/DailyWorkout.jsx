@@ -205,7 +205,7 @@ const DailyWorkout = () => {
                     {/* Action buttons stacked vertically */}
                     <div className="flex flex-col space-y-2 w-10">
                       <button 
-                        className="edit-button bg-gray-700 hover:bg-gray-600 p-2 rounded-full transition-colors"
+                        className="edit-button bg-gray-700 hover:bg-gray-600 p-2 rounded-full transition-colors flex items-center justify-center"
                         onClick={() => handleEditExerciseClick(index)}
                         title="Replace exercise"
                       >
@@ -214,7 +214,7 @@ const DailyWorkout = () => {
                         </svg>
                       </button>
                       <button 
-                        className="delete-button bg-red-900 hover:bg-red-700 p-2 rounded-full transition-colors"
+                        className="delete-button bg-red-900 hover:bg-red-700 p-2 rounded-full transition-colors flex items-center justify-center"
                         onClick={() => handleRemoveExercise(index)}
                         title="Remove exercise"
                       >

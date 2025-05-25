@@ -60,7 +60,7 @@ function workoutReducer(state, action) {
     case actions.UPDATE_EXERCISE: {
       const updatedExercises = state.exercises.map((exercise) =>
         exercise.id === action.payload.id
-          ? { ...exercise, ...action.payload }
+          ? ExerciseData.fromJSON({...exercise, ...action.payload})
           : exercise
       );
       return {
@@ -68,7 +68,7 @@ function workoutReducer(state, action) {
         exercises: updatedExercises,
         selectedExercise: 
           state.selectedExercise && state.selectedExercise.id === action.payload.id
-            ? { ...state.selectedExercise, ...action.payload }
+            ? ExerciseData.fromJSON({...state.selectedExercise, ...action.payload})
             : state.selectedExercise,
       };
     }
@@ -143,7 +143,7 @@ function workoutReducer(state, action) {
       
       const updatedExercises = state.exercises.map((exercise) => {
         if (exercise.id === exerciseId) {
-          const updatedExercise = ExerciseData.fromJSON(exercise.toJSON());
+          const updatedExercise = ExerciseData.fromJSON(exercise.toJSON ? exercise.toJSON() : exercise);
           updatedExercise.addHistoryEntry(entry);
           return updatedExercise;
         }
@@ -222,11 +222,19 @@ export const WorkoutProvider = ({ children }) => {
   // Save data to localStorage whenever it changes
   useEffect(() => {
     if (state.exercises.length > 0) {
-      localStorageUtils.setItem(STORAGE_KEYS.EXERCISES, state.exercises.map(ex => ex.toJSON()));
+      localStorageUtils.setItem(
+        STORAGE_KEYS.EXERCISES, 
+        state.exercises.map(ex => {
+          return ex.toJSON ? ex.toJSON() : ex;
+        })
+      );
     }
     
     if (state.workoutPlan) {
-      localStorageUtils.setItem(STORAGE_KEYS.WORKOUT_PLAN, state.workoutPlan.toJSON());
+      localStorageUtils.setItem(
+        STORAGE_KEYS.WORKOUT_PLAN, 
+        state.workoutPlan.toJSON ? state.workoutPlan.toJSON() : state.workoutPlan
+      );
     }
     
     if (state.selectedDay) {
@@ -275,7 +283,12 @@ export const WorkoutProvider = ({ children }) => {
   };
 
   const setSelectedExercise = (exercise) => {
-    dispatch({ type: actions.SET_SELECTED_EXERCISE, payload: exercise });
+    // If exercise is not already an ExerciseData instance, convert it
+    const exerciseInstance = exercise && !(exercise instanceof ExerciseData)
+      ? ExerciseData.fromJSON(exercise)
+      : exercise;
+      
+    dispatch({ type: actions.SET_SELECTED_EXERCISE, payload: exerciseInstance });
   };
 
   const addHistoryEntry = (exerciseId, entry) => {
