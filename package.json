@@ -15,7 +15,7 @@
     "react",
     "mobile"
   ],
-  "author": "Rachel Hoover",
+  "author": "David McKelvey",
   "license": "MIT",
   "dependencies": {
     "@heroicons/react": "^2.2.0",
