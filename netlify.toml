@@ -1,5 +1,4 @@
 [build]
-  base = "get-fit-dude"
   command = "npm run build"
   publish = "build"
 
