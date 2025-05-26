@@ -284,7 +284,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 12,
     category: 'Upper Body',
-    videoUrl: 'https://www.youtube.com/watch?v=ykJmrZ5v0Oo',
+    videoUrl: 'https://www.youtube.com/shorts/RfGESet5bJg',
     variations: ['Hammer curls', 'Concentration curls'],
     history: [
       { date: new Date(2025, 4, 5), sets: 2, reps: 10 },
@@ -299,7 +299,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 10,
     category: 'Upper Body',
-    videoUrl: 'https://www.youtube.com/watch?v=ZnnF-H0Wq3g',
+    videoUrl: 'https://youtu.be/a9oPnZReIRE?si=BUWSv6YLAlbnQc3e',
     variations: ['Overhead tricep extensions', 'Lying tricep extensions'],
     history: [
       { date: new Date(2025, 4, 5), sets: 2, reps: 8 },
@@ -314,7 +314,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 10,
     category: 'Upper Body',
-    videoUrl: 'https://www.youtube.com/watch?v=rFZ-Uc8_K4c',
+    videoUrl: 'https://youtube.com/shorts/aponH0bHqtg?si=TcXj8--NFnffWtbw',
     variations: ['Incline dumbbell flyes', 'Decline dumbbell flyes'],
     history: [
       { date: new Date(2025, 4, 5), sets: 2, reps: 8 },
@@ -329,7 +329,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 15,
     category: 'Upper Body',
-    videoUrl: 'https://www.youtube.com/watch?v=cJRVNpCftCE',
+    videoUrl: 'https://www.youtube.com/shorts/yDzbztHQ1yI',
     variations: ['Behind the back dumbbell shrugs'],
     history: [
       { date: new Date(2025, 4, 5), sets: 2, reps: 12 },
@@ -344,7 +344,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 12,
     category: 'Upper Body',
-    videoUrl: 'https://www.youtube.com/watch?v=aqRlJgJGC0Q',
+    videoUrl: 'https://www.youtube.com/watch?v=hRJ6tR5-if0',
     variations: ['Alternating front raises', 'Plate front raises'],
     history: [
       { date: new Date(2025, 4, 5), sets: 2, reps: 10 },
@@ -359,7 +359,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 12,
     category: 'Upper Body',
-    videoUrl: 'https://www.youtube.com/watch?v=3VcKaXpzqRo',
+    videoUrl: 'https://www.youtube.com/shorts/JIhbYYA1Q90',
     variations: ['Cable lateral raises', 'Seated lateral raises'],
     history: [
       { date: new Date(2025, 4, 5), sets: 2, reps: 10 },
@@ -374,7 +374,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 10,
     category: 'Upper Body',
-    videoUrl: 'https://www.youtube.com/watch?v=vthMCWPy-cE',
+    videoUrl: 'https://www.youtube.com/watch?v=jQjWlIwG4sI',
     variations: ['Dumbbell Floor Pullover', 'Bent Arm Dumbbell Pullover'],
     history: [
       { date: new Date(2025, 4, 5), sets: 2, reps: 8 },
@@ -389,7 +389,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 15,
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=C3eO_V0q6wY',
+    videoUrl: 'https://www.youtube.com/watch?v=Eaqr79zvqIw',
     variations: ['Banded bodyweight squats', 'Banded goblet squats'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 12 },
@@ -404,7 +404,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 15,
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=f4W2u-b7H5k',
+    videoUrl: 'https://www.youtube.com/watch?v=Zr2RLjIjCN0',
     variations: ['Banded single-leg glute bridge', 'Banded hip thrusts'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 12 },
@@ -419,7 +419,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 20, // (10 steps each direction)
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=sD_y54T_8pU',
+    videoUrl: 'https://youtu.be/i0w7KczRvkk?si=-E5bF9Dt3NfpeqR1',
     variations: ['Banded monster walks', 'Banded crab walks'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 16 },
@@ -434,7 +434,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 15,
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=eL-6W2i9rM4',
+    videoUrl: 'https://youtu.be/39vuP5xozsI?si=xRHB-2hK5i66yog8',
     variations: ['Clamshells with hip abduction', 'Banded side lying leg lift'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 12 },
@@ -449,7 +449,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 15,
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=fX_Rk67vV60',
+    videoUrl: 'https://youtu.be/NcaPvfmiDsU?si=rk4UkSsCzvi7QGDK',
     variations: ['Fire hydrants with band', 'Donkey kick pulses'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 12 },
@@ -464,7 +464,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 15,
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=54H6V0W3v-s',
+    videoUrl: 'https://youtu.be/CRpDEFu-a9c?si=I8Num6O9TpnK0Ta_',
     variations: ['Standing hip abduction with kickback', 'Banded lateral leg swings'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 12 },
@@ -479,7 +479,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 12,
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=tO_P9k27W00',
+    videoUrl: 'https://youtu.be/LaDKpYN9FDw?si=qidoaDP0r1XIvAtH',
     variations: ['Banded lying hamstring curls', 'Seated hamstring curls'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 10 },
@@ -494,7 +494,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 20,
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=q2y-wG44-4c',
+    videoUrl: 'https://youtu.be/_nUI6cnlQb0?si=OHhePVulkM-kCXlR',
     variations: ['Single-leg banded calf raises', 'Banded seated calf raises'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 16 },
@@ -524,7 +524,7 @@ export const initialExercises = [
     repType: 'count',
     reps: 10,
     category: 'Lower Body',
-    videoUrl: 'https://www.youtube.com/watch?v=8Kj-R90J7Q0',
+    videoUrl: 'https://youtu.be/1WFrKwEHxAs?si=2u21Xj2fmHzJRyUB',
     variations: ['Banded single-leg RDLs'],
     history: [
       { date: new Date(2025, 4, 8), sets: 2, reps: 8 },
