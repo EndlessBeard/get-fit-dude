@@ -254,13 +254,13 @@ const DailyWorkout = () => {
       {/* Exercise selector modal */}
       {showExerciseSelector && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 animate-fadeIn">
-          <div className="bg-gray-900 p-6 rounded-lg shadow-xl border border-gray-700 w-11/12 max-w-md max-h-[80vh] flex flex-col animate-scaleIn">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-xl border border-gray-700 w-11/12 max-w-md flex flex-col animate-scaleIn" style={{ maxHeight: '80vh' }}>
             <h3 className="text-lg font-bold mb-4 text-secondary">
               {editingExerciseIndex !== null ? 'Replace Exercise' : 'Add Exercise'}
             </h3>
             
             {availableExercises.length > 0 ? (
-              <div className="exercise-list overflow-y-auto flex-grow">
+              <div className="exercise-list overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800" style={{ maxHeight: 'calc(60vh - 100px)' }}>
                 {availableExercises.map((exercise) => (
                   <div 
                     key={exercise.id} 
